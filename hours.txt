@@ -1,2 +1,2 @@
 3.5 - 10/8 - Refresh DB Schemas. Create Schema and DB. REST Skeleton.
-1 - 10/9 - Flesh out sql commands
+3 - 10/9 - Flesh out sql commands. Finish rough API endpoints.
