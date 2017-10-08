@@ -4,7 +4,7 @@ const getAllCustomers = (req, res) => {
   db.query('SELECT * FROM customer', (err, result, fields) => {
     if (err) {
       res.send(err);
-    };
+    }
 
     res.json(result);
   });
@@ -27,14 +27,15 @@ const createCustomer = (req, res) => {
     if (err) {
       console.log(err.message);
     } else {
-      console.log('successfully inserted customer');
+      console.log('Inserted ' + result.affectedRows + ' row(s)');
     }
   });
 };
 
 const getCustomer = (req, res) => {
   const customerId = req.body.customerId;
-  db.query('SELECT * FROM customer WHERE id = ?', [customerId], (err, result) => {
+
+  db.query('SELECT * FROM customer WHERE customerId = ?', [customerId], (err, result) => {
     if (err) {
       console.log(err.message);
     } else {
@@ -44,11 +45,36 @@ const getCustomer = (req, res) => {
 };
 
 const updateCustomer = (req, res) => {
+  const customerId = req.body.customerId;
+  const changedColumns = req.body.changed;
 
+  Object.keys(changedColumns).forEach(column => {
+    const columnValue = changedColumns[column];
+
+    dq.query(
+      'UPDATE customer SET ? = ? where customerId = ?',
+      [column, columnValue, customerId],
+      (err, result) => {
+        if (err) {
+          console.log(err.message);
+        } else {
+          console.log('Updated ' + result.affectedRows + ' row(s)');
+        }
+      },
+    );
+  });
 };
 
 const deleteCustomer = (req, res) => {
+  const customerId = req.body.customerId;
 
+  db.query('DELETE FROM customer WHERE customerId = ?', [customerId], (err, result) => {
+    if (err) {
+      console.log(err.message);
+    } else {
+      console.log('Deleted ' + result.affectedRows + ' row(s)');
+    }
+  });
 };
 
 module.exports = {
@@ -56,5 +82,5 @@ module.exports = {
   createCustomer,
   getCustomer,
   updateCustomer,
-  deleteCustomer
-}
+  deleteCustomer,
+};
