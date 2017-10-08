@@ -3,7 +3,7 @@ const db = require('../../db');
 const getAllCustomers = (req, res) => {
   db.query('SELECT * FROM customer', (err, result, fields) => {
     if (err) {
-      res.send(err);
+      res.send(err.message);
     }
 
     res.json(result);
@@ -23,21 +23,22 @@ const createCustomer = (req, res) => {
     phoneNumber: req.body.phoneNumber,
   };
 
-  dq.query('INSERT INTO customer SET ?', customer, (err, result) => {
+  db.query('INSERT INTO customer SET ?', customer, (err, result) => {
     if (err) {
-      console.log(err.message);
+      res.send(err.message);
     } else {
       console.log('Inserted ' + result.affectedRows + ' row(s)');
     }
+    res.end();
   });
 };
 
 const getCustomer = (req, res) => {
-  const customerId = req.body.customerId;
+  const customerId = req.params.customerId;
 
   db.query('SELECT * FROM customer WHERE customerId = ?', [customerId], (err, result) => {
     if (err) {
-      console.log(err.message);
+      res.send(err.message);
     } else {
       res.json(result);
     }
@@ -45,35 +46,38 @@ const getCustomer = (req, res) => {
 };
 
 const updateCustomer = (req, res) => {
-  const customerId = req.body.customerId;
+  const customerId = req.params.customerId;
   const changedColumns = req.body.changed;
 
   Object.keys(changedColumns).forEach(column => {
     const columnValue = changedColumns[column];
 
-    dq.query(
-      'UPDATE customer SET ? = ? where customerId = ?',
+    db.query(
+      'UPDATE customer SET ?? = ? where customerId = ?',
       [column, columnValue, customerId],
       (err, result) => {
         if (err) {
-          console.log(err.message);
+          res.send(err.message);
         } else {
-          console.log('Updated ' + result.affectedRows + ' row(s)');
+          console.log('Updated column in ' + result.affectedRows + ' row(s)');
         }
       },
     );
   });
+
+  res.end();
 };
 
 const deleteCustomer = (req, res) => {
-  const customerId = req.body.customerId;
+  const customerId = req.params.customerId;
 
   db.query('DELETE FROM customer WHERE customerId = ?', [customerId], (err, result) => {
     if (err) {
-      console.log(err.message);
+      res.send(err.message);
     } else {
       console.log('Deleted ' + result.affectedRows + ' row(s)');
     }
+    res.end();
   });
 };
 
