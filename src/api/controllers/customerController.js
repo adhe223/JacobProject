@@ -3,10 +3,10 @@ const db = require('../../db');
 const getAllCustomers = (req, res) => {
   db.query('SELECT * FROM customer', (err, result, fields) => {
     if (err) {
-      res.send(err.message);
+      return res.send(err.message);
     }
 
-    res.json(result);
+    return res.json(result);
   });
 };
 
@@ -25,11 +25,11 @@ const createCustomer = (req, res) => {
 
   db.query('INSERT INTO customer SET ?', customer, (err, result) => {
     if (err) {
-      res.send(err.message);
+      return res.send(err.message);
     } else {
       console.log('Inserted ' + result.affectedRows + ' row(s)');
     }
-    res.end();
+    return res.end();
   });
 };
 
@@ -38,9 +38,9 @@ const getCustomer = (req, res) => {
 
   db.query('SELECT * FROM customer WHERE customerId = ?', [customerId], (err, result) => {
     if (err) {
-      res.send(err.message);
+      return res.send(err.message);
     } else {
-      res.json(result);
+      return res.json(result);
     }
   });
 };
@@ -48,6 +48,7 @@ const getCustomer = (req, res) => {
 const updateCustomer = (req, res) => {
   const customerId = req.params.customerId;
   const changedColumns = req.body.changed;
+  let errMessages = '';
 
   Object.keys(changedColumns).forEach(column => {
     const columnValue = changedColumns[column];
@@ -57,7 +58,7 @@ const updateCustomer = (req, res) => {
       [column, columnValue, customerId],
       (err, result) => {
         if (err) {
-          res.send(err.message);
+          errMessages += err.message;
         } else {
           console.log('Updated column in ' + result.affectedRows + ' row(s)');
         }
@@ -65,7 +66,10 @@ const updateCustomer = (req, res) => {
     );
   });
 
-  res.end();
+  if (errMessages) {
+    return res.send(errMessages);
+  }
+  return res.end();
 };
 
 const deleteCustomer = (req, res) => {
@@ -73,11 +77,11 @@ const deleteCustomer = (req, res) => {
 
   db.query('DELETE FROM customer WHERE customerId = ?', [customerId], (err, result) => {
     if (err) {
-      res.send(err.message);
+      return res.send(err.message);
     } else {
       console.log('Deleted ' + result.affectedRows + ' row(s)');
     }
-    res.end();
+    return res.end();
   });
 };
 
