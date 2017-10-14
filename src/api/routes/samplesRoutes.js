@@ -2,7 +2,7 @@ module.exports = function (app) {
   const samples = require('../controllers/samplesController');
 
   app.route('/samples')
-    .get(samples.getAllsamples)
+    .get(samples.getAllSamples)
     .post(samples.createSample);
 
   app.route('/samples/:sampleId')
