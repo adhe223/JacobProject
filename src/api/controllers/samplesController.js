@@ -12,7 +12,7 @@ const getAllSamples = (req, res) => {
 
 const createSample = (req, res) => {
   const sample = {
-    data: 'data',
+    data: req.body.data,
     Order_orderId: req.body.orderId,
   };
 
