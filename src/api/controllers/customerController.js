@@ -13,15 +13,15 @@ const getAllCustomers = (req, res) => {
 const getCustomerByCompany = (req, res) => {
   db.query(
     'SELECT * FROM customer WHERE INSTR(companyName,?)>0',
-    [req.params.searchTerm],
+    [req.query.searchTerm],
     (err, result, fields
-  ) => {
-    if (err) {
-      return res.send(err.message);
-    }
+    ) => {
+      if (err) {
+        return res.send(err.message);
+      }
 
-    return res.json(result);
-  });
+      return res.json(result);
+    });
 };
 
 const createCustomer = (req, res) => {
