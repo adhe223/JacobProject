@@ -5,6 +5,9 @@ module.exports = function (app) {
     .get(customer.getAllCustomers)
     .post(customer.createCustomer);
 
+  app.route('/customers/search-by-company')
+    .get(customer.getCustomerByCompany);
+
   app.route('/customers/:customerId')
     .get(customer.getCustomer)
     .put(customer.updateCustomer)

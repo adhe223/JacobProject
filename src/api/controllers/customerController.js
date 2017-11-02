@@ -10,6 +10,20 @@ const getAllCustomers = (req, res) => {
   });
 };
 
+const getCustomerByCompany = (req, res) => {
+  db.query(
+    'SELECT * FROM customer WHERE INSTR(companyName,?)>0',
+    [req.params.searchTerm],
+    (err, result, fields
+  ) => {
+    if (err) {
+      return res.send(err.message);
+    }
+
+    return res.json(result);
+  });
+};
+
 const createCustomer = (req, res) => {
   const customer = {
     firstName: req.body.firstName,
@@ -87,6 +101,7 @@ const deleteCustomer = (req, res) => {
 
 module.exports = {
   getAllCustomers,
+  getCustomerByCompany,
   createCustomer,
   getCustomer,
   updateCustomer,
